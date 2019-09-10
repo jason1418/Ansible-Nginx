@@ -1,9 +1,9 @@
-- name: Install NGINX repo
+- name: Install Nginx repo
   yum: 
     name: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
     state: present
 
-- name: Install NGINX, php, php-fpm
+- name: Install Nginx, php, php-fpm
   yum: 
     name: {{ item }}
     state: present
@@ -19,16 +19,28 @@
     state: directory
     mode: '0755'
   
-- name: Config
+- name: Config Nginx
   template:
-    src: {{ item.src }}
-    dest: {{ item.desc }}
+    src: 'template/default.conf.j2'
+    dest: '/etc/nginx/conf.d/default.conf'
+    mode: '0755'
+    validate: '/usr/nginx/sbin/nginx -t -c %s'
+  notify: reload Nginx service
+
+- name: Config php-fpm
+  template:
+    src: 'template/www.conf.j2'
+    dest: '/etc/php-fpm.d/www.conf'
     mode: '0755'
   with_items:
-    - { src: 'template/default.conf.j2', dest: '/etc/nginx/conf.d/default.conf' }
-    - { src: 'template/www.conf.j2', dest: '/etc/php-fpm.d/www.conf' }
     - { src: 'template/index.php.j2', dest: '{{ Nginx_rootpath }}/index.php' }
-  notify: reload service
+  notify: reload php-fpm service
+  
+- name: PHP index.php file
+  template:
+    src: 'template/index.php.j2'
+    dest: '{{ Nginx_rootpath }}/index.php'
+    mode: '0755'
 
 - name: setting firewall
   ufw:
@@ -37,18 +49,12 @@
     proto: tcp
 
 handlers:
-  - name: restart service
+  - name: restart Nginx service
     service: 
-      name: {{ item }}
+      name: nginx
       state: restarted
-    with_items:
-      - nginx
-      - php-fpm
   
-  - name: reload service
+  - name: restart php-fpm service
     service: 
-      name: {{ item }}
-      state: reloaded
-    with_items:
-      - nginx
-      - php-fpm
+      name: php-fpm
+      state: restarted
