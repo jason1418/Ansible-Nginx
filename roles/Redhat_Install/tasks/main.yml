@@ -49,12 +49,10 @@
     proto: tcp
 
 handlers:
-  - name: restart Nginx service
+  - name: restart service
     service: 
-      name: nginx
+      name: {{ item }}
       state: restarted
-  
-  - name: restart php-fpm service
-    service: 
-      name: php-fpm
-      state: restarted
+    with_items:
+      - nginx
+      - php-fpm
