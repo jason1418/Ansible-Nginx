@@ -2,7 +2,6 @@
 - hosts: client
   become: true
   environment:
-    System_OS: "{{ ansible_os_family }}"
     content: "Ansible-Nginx"
     Nginx_user: "nginx"
     Nginx_group: "nginx"
@@ -10,8 +9,8 @@
     Nginx_rootpath: "/home/web"
 
   roles:
-    - {role: Redhat_Install, when: System_OS == 'Redhat'}
-    - {role: Debian_Install, when: System_OS == 'Debian'}
+    - {role: Redhat_Install, when: {{ ansible_os_family }} == 'Redhat'}
+    - {role: Debian_Install, when: {{ ansible_os_family }} == 'Debian'}
   
   post_tasks:
     - name: Testing NGINX conf
