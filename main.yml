@@ -8,3 +8,12 @@
   roles:
     - {role: Redhat_Install, when: System_OS == 'Redhat'}
     - {role: Debian_Install, when: System_OS == 'Debian'}
+  
+  post_tasks:
+    - name: Testing NGINX conf
+      command: "/usr/local/nginx -t -C /etc/nginx/conf.d/default.conf"
+      register: rs_config
+
+    - name: print result
+      debug:
+        msg: rs_config.stdout_lines
