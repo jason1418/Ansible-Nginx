@@ -5,20 +5,31 @@
 
 - name: Install Nginx, php, php-fpm
   yum: 
-    name: {{ item }}
+    name: ['nginx', 'php', 'php-fpm']
     state: present
+  notify: restart service
+
+- name: Start service
+  service:
+    name: "{{ item }}"
+    state: started
   with_items:
     - nginx
-    - php
     - php-fpm
-  notify: restart service
   
-- name: Config Nginx
+- name: Config Nginx default.conf
   template:
     src: 'template/default.conf.j2'
     dest: '/etc/nginx/conf.d/default.conf'
     mode: '0755'
-    validate: '/usr/nginx/sbin/nginx -t -c %s'
+  notify: reload Nginx service
+
+- name: Config Nginx nginx.conf
+  template:
+    src: 'template/nginx.conf.j2'
+    dest: '/etc/nginx/nginx.conf'
+    mode: '0755'
+    #validate: '/usr/sbin/nginx -t -c %s'
   notify: reload Nginx service
 
 - name: Config php-fpm
@@ -37,16 +48,7 @@
     mode: '0755'
 
 - name: setting firewall
-  ufw:
-    rule: allow
-    port: 80
-    proto: tcp
-
-handlers:
-  - name: restart service
-    service: 
-      name: {{ item }}
-      state: restarted
-    with_items:
-      - nginx
-      - php-fpm
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
