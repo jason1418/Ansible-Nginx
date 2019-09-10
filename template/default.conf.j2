@@ -7,7 +7,7 @@ server {
  
     location / {
         index index.php index.html index.htm;
-        root  {{ Nginx_rootpath }};
+        root  /usr/share/nginx/html;
     }
  
     #error_page  404              /404.html;
@@ -28,7 +28,7 @@ server {
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
     #
     location ~ \.php$ {
-        root  {{ Nginx_rootpath }};
+        root  /usr/share/nginx/html;
         try_files $uri =404;
         fastcgi_pass  unix:/var/run/php-fpm/php-fpm.sock;
         fastcgi_index index.php;
