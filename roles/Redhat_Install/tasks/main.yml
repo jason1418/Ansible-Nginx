@@ -1,0 +1,27 @@
+- name: Install NGINX, php, php-fpm
+  yum: 
+    name: {{ item }}
+    state: present
+  with_items:
+    - nginx
+    - php
+    - php-fpm
+  
+- name: Config
+  template:
+    src: {{ item.src }}
+    dest: {{ item.desc }}
+    mode: '0755'
+  with_items:
+    - { src: 'template/default.conf.j2', dest: '/etc/nginx/conf.d/default.conf' }
+    - { src: 'template/www.conf.j2', dest: '/etc/php-fpm.d/www.conf' }
+  notify: restart service
+
+handlers:
+  - name: restart service
+    service: 
+      name: {{ item }}
+      state: restarted
+    with_items:
+      - nginx
+      - php-fpm
