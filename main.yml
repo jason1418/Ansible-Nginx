@@ -3,6 +3,7 @@
   become: true
   environment:
     System_OS: "{{ ansible_os_family }}"
+    content: "Ansible-Nginx"
     Nginx_port: 80
     Nginx_rootpath: "/home/web"
 
