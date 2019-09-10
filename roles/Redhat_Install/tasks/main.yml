@@ -6,6 +6,7 @@
     - nginx
     - php
     - php-fpm
+  notify: restart service
   
 - name: Config
   template:
@@ -15,13 +16,21 @@
   with_items:
     - { src: 'template/default.conf.j2', dest: '/etc/nginx/conf.d/default.conf' }
     - { src: 'template/www.conf.j2', dest: '/etc/php-fpm.d/www.conf' }
-  notify: restart service
+  notify: reload service
 
 handlers:
   - name: restart service
     service: 
       name: {{ item }}
       state: restarted
+    with_items:
+      - nginx
+      - php-fpm
+  
+  - name: reload service
+    service: 
+      name: {{ item }}
+      state: reloaded
     with_items:
       - nginx
       - php-fpm
