@@ -2,11 +2,12 @@
 - hosts: client
   become: true
   environment:
-    content: "Ansible-Nginx"
+    Website_Name: "Ansible-Nginx"
     Nginx_user: "nginx"
     Nginx_group: "nginx"
     Nginx_port: "80"
     Nginx_rootpath: "/home/web"
+    content: "Ansible-Nginx"
 
   roles:
     - {role: Redhat_Install, when: {{ ansible_os_family }} == 'Redhat'}
