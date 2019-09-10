@@ -9,8 +9,8 @@
     content: "Ansible-Nginx"
 
   roles:
-    - {role: Redhat_Install, when: {{ ansible_os_family }} == 'Redhat'}
-    - {role: Debian_Install, when: {{ ansible_os_family }} == 'Debian'}
+    - {role: Redhat_Install, when: ansible_os_family  == 'Debian' or ansible_os_family == 'Ubuntu'}
+    - {role: Debian_Install, when: ansible_os_family  == 'Debian' or ansible_os_family == 'Ubuntu'}
   
   post_tasks:
     - name: Testing NGINX conf
