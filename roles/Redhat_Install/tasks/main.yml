@@ -13,12 +13,6 @@
     - php-fpm
   notify: restart service
   
-- name: Create website directory
-  file:
-    path: {{ Nginx_rootpath }}
-    state: directory
-    mode: '0755'
-  
 - name: Config Nginx
   template:
     src: 'template/default.conf.j2'
@@ -33,13 +27,13 @@
     dest: '/etc/php-fpm.d/www.conf'
     mode: '0755'
   with_items:
-    - { src: 'template/index.php.j2', dest: '{{ Nginx_rootpath }}/index.php' }
+    - { src: 'template/index.php.j2', dest: '/usr/share/nginx/html/index.php' }
   notify: reload php-fpm service
   
 - name: PHP index.php file
   template:
     src: 'template/index.php.j2'
-    dest: '{{ Nginx_rootpath }}/index.php'
+    dest: '/usr/share/nginx/html/index.php'
     mode: '0755'
 
 - name: setting firewall
