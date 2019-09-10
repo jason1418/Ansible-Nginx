@@ -30,6 +30,12 @@
     - { src: 'template/index.php.j2', dest: '{{ Nginx_rootpath }}/index.php' }
   notify: reload service
 
+- name: setting firewall
+  ufw:
+    rule: allow
+    port: 80
+    proto: tcp
+
 handlers:
   - name: restart service
     service: 
