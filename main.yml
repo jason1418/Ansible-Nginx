@@ -1,5 +1,6 @@
 ---
-- hosts: client
+- name: Install Nginx + PHP
+  hosts: client
   become: true
   environment:
     Website_Name: "Ansible-Nginx"
