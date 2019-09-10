@@ -6,7 +6,8 @@ server {
     #access_log  /var/log/nginx/log/host.access.log  main;
  
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
+        index index.php index.html index.htm;
+        root  {{ Nginx_rootpath }};
     }
  
     #error_page  404              /404.html;
@@ -27,11 +28,12 @@ server {
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
     #
     location ~ \.php$ {
-        root           html;
-        fastcgi_pass   unix:/var/run/php-fpm/php-fpm.sock; 
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-        include        fastcgi_params;
+        root  {{ Nginx_rootpath }};
+        try_files $uri =404;
+        fastcgi_pass  unix:/var/run/php-fpm/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
     }
  
     # deny access to .htaccess files, if Apache's document root
