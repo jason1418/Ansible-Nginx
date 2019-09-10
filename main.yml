@@ -19,4 +19,4 @@
 
     - name: print result
       debug:
-        msg: rs_config.stdout_lines
+        msg: "{{ rs_config.stdout_lines }}"
