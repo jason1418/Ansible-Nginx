@@ -11,7 +11,7 @@
 
   roles:
     - {role: Redhat_Install, when: ansible_os_family  == 'RedHat'}
-    - {role: Debian_Install, when: ansible_os_family  == 'Debian' or ansible_os_family == 'Ubuntu'}
+    - {role: Debian_Install, when: ansible_os_family  == 'Debian'}
   
   handlers:
   - name: restart service
