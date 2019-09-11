@@ -1,0 +1,17 @@
+- name: restart service
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - nginx
+    - php-fpm
+  
+- name: reload Nginx service
+  service:
+    name: nginx
+    state: reloaded
+
+- name: reload php-fpm service
+  service: 
+    name: php-fpm
+    state: reloaded
